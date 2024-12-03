@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int x = 2;
+int changing(int *array)
+{
+
+    *array = 8;
+}
+
+int main()
+{
+    int players[10] = {7, 5, 1, 8, 9, 6, 4, 2, 3, 0};
+    selectionSort(players,10);
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%4d", players[i]);
+    }
+}
+
+int selectionSort(int array[], int last)
+{
+    for (int i = 0; i < last; i++)
+    {
+        for (int j = i + 1; j < last; j++)
+        {
+            if (array[i] > array[j])
+            {
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+    }
+}
