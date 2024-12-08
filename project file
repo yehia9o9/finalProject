@@ -1,35 +1,52 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-int x = 2;
-int changing(int *array)
+#include <stdbool.h>
+#include <string.h>
+#define MAX_BOOKS 50
+#define MAX_MEMBERS 30
+#define MAX_BORROW 150
+int countBooks = 0;
+int memberID;
+int booksList_ID[MAX_BOOKS];
+int booksList_Copies[MAX_BOOKS];
+int Members[MAX_MEMBERS];
+
+struct books
 {
-
-    *array = 8;
-}
-
+  int bookID;
+  int bookCopies;
+};
+struct borrowedBooks
+{
+  int bookID;
+  int memberBorrowed;
+  int Date[];
+};
+int inputBooks();
 int main()
 {
-    int players[10] = {7, 5, 1, 8, 9, 6, 4, 2, 3, 0};
-    selectionSort(players,10);
-    for (int i = 0; i < 10; i++)
-    {
-        printf("%4d", players[i]);
-    }
+  inputBooks();
+  printf("%d", booksList_Copies[0]);
+}
+int inputBooks()
+{
+  printf("Books:\n");
+
+  struct books book;
+  while (7)
+  {
+    int books_ID;
+    int books_Copies;
+    if (scanf("%d %d", &books_ID, &books_Copies) == EOF)
+      break;
+    booksList_ID[countBooks] = books_ID;
+    booksList_Copies[countBooks] = books_Copies;
+    countBooks++;
+  }
 }
 
-int selectionSort(int array[], int last)
+int inputMembers()
 {
-    for (int i = 0; i < last; i++)
-    {
-        for (int j = i + 1; j < last; j++)
-        {
-            if (array[i] > array[j])
-            {
-                int temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-        }
-    }
+    printf("Members:\n");
+    int members;
+    
 }
