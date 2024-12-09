@@ -77,9 +77,9 @@ int inputBorrowed()
   for (int i = 0; true; i++)
   {
 
-    if (scanf("%d %d", &booksBorrowed,&membersBorrowed) == EOF)
+    if (scanf("%d %d", &booksBorrowed, &membersBorrowed) == EOF)
       break;
-      if (scanf("%d/%d/%d", &days,&months,&year) == EOF)
+    if (scanf("%d/%d/%d", &days, &months, &year) == EOF)
       break;
 
     borrowed[countMembers][0] = booksBorrowed;
@@ -89,7 +89,5 @@ int inputBorrowed()
     date[countdate][2] = year;
     countBorrowed++;
     countdate++;
-
-   
-}
+  }
 }
