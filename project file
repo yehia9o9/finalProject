@@ -11,18 +11,15 @@ int countMembers = 0;
 int countBorrowed = 0;
 int countdate = 0;
 // lists of input
+// books
 int booksList_ID_List[MAX_BOOKS];
 int booksList_Copies_List[MAX_BOOKS];
+// member
 int Members_ID_List[MAX_MEMBERS];
+// borrowed
 int borrowed[MAX_BORROW][2];
-int date[MAX_BOOKS][3];
+int date[MAX_BORROW][3];
 
-struct borrowedBooks
-{
-  int bookID;
-  int memberBorrowed;
-  int Date[];
-};
 int inputBooks();
 int inputMembers();
 int inputBorrowed();
@@ -38,13 +35,13 @@ int main()
 int inputBooks()
 {
   printf("Books:\n");
-
-  while (1)
+  int books_ID;
+  int books_Copies;
+  while (true)
   {
-    int books_ID;
-    int books_Copies;
     if (scanf("%d %d", &books_ID, &books_Copies) == EOF)
       break;
+
     booksList_ID_List[countBooks] = books_ID;
     booksList_Copies_List[countBooks] = books_Copies;
     countBooks++;
@@ -56,7 +53,7 @@ int inputMembers()
 {
   printf("Members:\n");
   int member_ID;
-  while (1)
+  while (true) 
   {
     if (scanf("%d", &member_ID) == EOF)
       break;
@@ -74,7 +71,7 @@ int inputBorrowed()
   int booksBorrowed, membersBorrowed;
   int days, months, year;
 
-  for (int i = 0; true; i++)
+  while (true)
   {
 
     if (scanf("%d %d", &booksBorrowed, &membersBorrowed) == EOF)
