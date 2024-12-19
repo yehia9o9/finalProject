@@ -59,26 +59,7 @@ int main()
       printf("this section does not exist\n");
   }
   // commands
-  while (true)
-  {
-    scanf("%s", cmd);
-    if (strcmp(cmd, "Books_Borrowed_Days") == 0)
-    {
-      Books_Borrowed_Days();
-    }
-    else if (strcmp(cmd, "Quit") == 0)
-    {
-      break;
-    }
-    else if (strcmp(cmd, "Number_Books") == 0)
-    {
-      printf("%d", countBooks);
-    }
-    else if (strcmp(cmd, "Number_Members") == 0)
-    {
-      printf("%d", countMembers);
-    }
-  }
+ 
 }
 
 // books
