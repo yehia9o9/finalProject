@@ -29,11 +29,7 @@ int date[MAX_BORROW][3];
 int inputBooks();
 int inputMembers();
 int inputBorrowed();
-// 2.action functions
-int Books_Borrowed_Days();
-// checking functions
-int checkDate(int i);
-int checkMembers(int i);
+
 // main
 int main()
 {
