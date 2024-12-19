@@ -10,6 +10,7 @@ int countBooks = 0;
 int countMembers = 0;
 int countBorrowed = 0;
 int countdate = 0;
+
 // lists of input
 // books
 int booksList_ID_List[MAX_BOOKS];
@@ -19,53 +20,111 @@ int Members_ID_List[MAX_MEMBERS];
 // borrowed
 int borrowed[MAX_BORROW][2];
 int date[MAX_BORROW][3];
-
+// declaration
+// ation functions
 int inputBooks();
 int inputMembers();
 int inputBorrowed();
 
+
 // main
 int main()
 {
-  inputBooks();
-  inputMembers();
-  inputBorrowed();
+
+  // input
+  char section[50];
+  char cmd[50];
+  while (scanf("%s", section) != EOF)
+  {
+    if ((inputBooks() + inputMembers() + inputBorrowed()) == 12)
+      break;
+    if (strcmp(section, "Books:") == 0)
+    {
+      inputBooks();
+    }
+    else if (strcmp(section, "Members:") == 0)
+    {
+      inputMembers();
+    }
+    else if (strcmp(section, "Borrowed_Books:") == 0)
+    {
+
+      inputBorrowed();
+    }
+    else
+      printf("this section does not exist\n");
+
+  } // commans
+  while (true)
+  {
+    scanf("%s", cmd);
+    if (strcmp(cmd, "Books_Borrowed_Days") == 0)
+    {
+      Books_Borrowed_Days();
+    }
+    else if (strcmp(cmd, "Quit") == 0)
+    {
+      break;
+    }
+    else if (strcmp(cmd, "Number_Books") == 0)
+    {
+      printf("%d", countBooks);
+    }
+    else if (strcmp(cmd, "Number_Members") == 0)
+    {
+      printf("%d", countMembers);
+    }
+  }
 }
+
 // books
 int inputBooks()
 {
-  printf("Books:\n");
+
   int books_ID;
   int books_Copies;
+
   while (true)
   {
-    if (scanf("%d %d", &books_ID, &books_Copies) == EOF)
+
+    if (scanf("%d %d", &books_ID, &books_Copies) != 2 || countBooks == MAX_BOOKS)
+    {
+      check1 = 4;
       break;
+    }
 
     booksList_ID_List[countBooks] = books_ID;
     booksList_Copies_List[countBooks] = books_Copies;
     countBooks++;
   }
+  return check1;
 }
+
 // members
 
 int inputMembers()
 {
-  printf("Members:\n");
+
   int member_ID;
-  while (true) 
+
+  while (true)
   {
-    if (scanf("%d", &member_ID) == EOF)
+
+    if (scanf("%d", &member_ID) != 1 || countMembers == MAX_MEMBERS)
+    {
+      check2 = 4;
       break;
+    }
 
     Members_ID_List[countMembers] = member_ID;
     countMembers++;
   }
+  return check2;
 }
 // borrowed
 int inputBorrowed()
 {
-  printf("Borrowed:\n");
+
   int column1 = 0;
   int column2 = 0;
   int booksBorrowed, membersBorrowed;
@@ -74,17 +133,30 @@ int inputBorrowed()
   while (true)
   {
 
-    if (scanf("%d %d", &booksBorrowed, &membersBorrowed) == EOF)
+    if (scanf("%d %d %d/%d/%d", &booksBorrowed, &membersBorrowed, &days, &months, &year) != 5 || countBorrowed == MAX_BORROW)
+    {
+      check3 = 4;
       break;
-    if (scanf("%d/%d/%d", &days, &months, &year) == EOF)
-      break;
-
-    borrowed[countMembers][0] = booksBorrowed;
-    borrowed[countMembers][1] = membersBorrowed;
+    }
+    borrowed[countBorrowed][0] = booksBorrowed;
+    borrowed[countBorrowed][1] = membersBorrowed;
     date[countdate][0] = days;
     date[countdate][1] = months;
     date[countdate][2] = year;
+    for (int i = 0; i < countBooks; i++)
+    {
+      if (borrowed[countMembers][0] == booksList_ID_List[i])
+        if (booksList_Copies_List[i] > 0)
+        {
+          booksList_Copies_List[i] = booksList_Copies_List[i] - 1;
+        }
+        else if (booksList_Copies_List[i] == 0)
+        {
+          printf("There are no copies for this book");
+        }
+    }
     countBorrowed++;
     countdate++;
   }
+  return check3;
 }
