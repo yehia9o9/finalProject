@@ -1,3 +1,4 @@
+// libraries
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -10,23 +11,29 @@ int countBooks = 0;
 int countMembers = 0;
 int countBorrowed = 0;
 int countdate = 0;
-
+// return values when inout is completed
+int booksCompleted;
+int membersCompleted;
+int borrowedCompleted;
 // lists of input
-// books
+// 1.books
 int booksList_ID_List[MAX_BOOKS];
 int booksList_Copies_List[MAX_BOOKS];
-// member
+// 2.member
 int Members_ID_List[MAX_MEMBERS];
-// borrowed
+// 3.borrowed
 int borrowed[MAX_BORROW][2];
 int date[MAX_BORROW][3];
 // declaration
-// ation functions
+// 1.input
 int inputBooks();
 int inputMembers();
 int inputBorrowed();
-
-
+// 2.action functions
+int Books_Borrowed_Days();
+// checking functions
+int checkDate(int i);
+int checkMembers(int i);
 // main
 int main()
 {
@@ -34,6 +41,7 @@ int main()
   // input
   char section[50];
   char cmd[50];
+  // input
   while (scanf("%s", section) != EOF)
   {
     if ((inputBooks() + inputMembers() + inputBorrowed()) == 12)
@@ -53,8 +61,8 @@ int main()
     }
     else
       printf("this section does not exist\n");
-
-  } // commans
+  }
+  // commands
   while (true)
   {
     scanf("%s", cmd);
@@ -89,7 +97,7 @@ int inputBooks()
 
     if (scanf("%d %d", &books_ID, &books_Copies) != 2 || countBooks == MAX_BOOKS)
     {
-      check1 = 4;
+      booksCompleted = 4;
       break;
     }
 
@@ -97,7 +105,7 @@ int inputBooks()
     booksList_Copies_List[countBooks] = books_Copies;
     countBooks++;
   }
-  return check1;
+  return booksCompleted;
 }
 
 // members
@@ -112,14 +120,14 @@ int inputMembers()
 
     if (scanf("%d", &member_ID) != 1 || countMembers == MAX_MEMBERS)
     {
-      check2 = 4;
+      membersCompleted = 4;
       break;
     }
 
     Members_ID_List[countMembers] = member_ID;
     countMembers++;
   }
-  return check2;
+  return membersCompleted;
 }
 // borrowed
 int inputBorrowed()
@@ -135,7 +143,7 @@ int inputBorrowed()
 
     if (scanf("%d %d %d/%d/%d", &booksBorrowed, &membersBorrowed, &days, &months, &year) != 5 || countBorrowed == MAX_BORROW)
     {
-      check3 = 4;
+      borrowedCompleted = 4;
       break;
     }
     borrowed[countBorrowed][0] = booksBorrowed;
@@ -158,5 +166,5 @@ int inputBorrowed()
     countBorrowed++;
     countdate++;
   }
-  return check3;
+  return borrowedCompleted;
 }
