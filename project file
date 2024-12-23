@@ -1,7 +1,7 @@
 // libraries
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 // constants
 #define MAX_BOOKS 50
 #define MAX_MEMBERS 30
@@ -19,25 +19,39 @@ int booksList_Copies_List[MAX_BOOKS];
 // 2.member
 int Members_ID_List[MAX_MEMBERS];
 // 3.borrowed
-int borrowed[MAX_BORROW][2];
-int date[MAX_BORROW][3];
+int borrowed[MAX_BORROW][2];  
+int date[MAX_BORROW][3];  
 // declaration
 // 1.input
 int inputBooks();
 int inputMembers();
 int inputBorrowed();
+// 2.action functions
+int Books_Borrowed_Days();
+void books_unborrowed();
+void list_member_books(int member);
+void printBooksAvailable();
+void printNumberBooks();
+void overlapping(int bookID);
+void mostBorrowedBook();
+void Members_Less_n(int limit);
+void Number_Members();
+void List_Book_Borrowers(int bookID);
+// checking functions
+int checkDate(int i);
+int checkMembers(int i);
 
 // main
 int main()
 {
-  
+
   // input
   char section[50];
   char cmd[50];
   // input
-  while (scanf("%s", section) != EOF)
+  while (scanf("%50s", section) != EOF)
   {
-    
+
     if (strcmp(section, "Books:") == 0)
     {
       inputBooks();
@@ -51,32 +65,92 @@ int main()
 
       inputBorrowed();
       break;
-      
     }
     else
     {
       printf("this section does not exist\n");
     }
-   
   }
 
   // commands
-
+  while (true)
+  {
+    scanf("%50s", cmd);
+    if (strcmp(cmd, "Books_Borrowed_Days") == 0)
+    {
+      Books_Borrowed_Days();
+    }
+    else if (strcmp(cmd, "Number_Members") == 0)
+    {
+      printf("%d", countMembers);
+    } // Ahmed Thanwya
+    else if (strcmp(cmd, "Books_Unborrowed") == 0)
+    {
+      books_unborrowed();
+    } // Ahmed Thanwya
+    else if (strcmp(cmd, "List_Member_Books") == 0)
+    {
+      int member;
+      scanf("%d", &member);
+      list_member_books(member);
+    } // sama
+    else if (strcmp(cmd, "Books_Available") == 0)
+    {
+      printBooksAvailable();
+    } // sama
+    else if (strcmp(cmd, "Overlapping_Borrowers") == 0)
+    {
+      int bookIDOver;
+      scanf("%d", &bookIDOver);
+      overlapping(bookIDOver);
+    } // Sama
+    else if (strcmp(cmd, "Number_Books") == 0)
+    {
+      printNumberBooks();
+    } // basmalla
+    else if (strcmp(cmd, "Most_Borrowed") == 0)
+    {
+      mostBorrowedBook();
+    } // basmalla
+    else if (strcmp(cmd, "Members_Less") == 0)
+    {
+      int limit;
+      scanf("%d", &limit);
+      Members_Less_n(limit);
+    } // Ahmed Stem
+    else if (strcmp(cmd, "Number_Members") == 0)
+    {
+      Number_Members();
+    } // Ahmed Stem
+    else if (strcmp(cmd, "List_Book_Borrowers") == 0)
+    {
+      int bookID;
+      scanf("%d", &bookID);
+      List_Book_Borrowers(bookID);
+    }
+    else if (strcmp(cmd, "Quit") == 0)
+    {
+      break;
+    }
+    else
+    {
+      printf("Wrong command\n");
+    }
+  }
 }
 
 // books
 int inputBooks()
 {
-  
+
   int books_ID;
   int books_Copies;
 
   while (true)
   {
 
-    if (scanf("%d %d", &books_ID, &books_Copies) != 2  || countBooks == MAX_BOOKS)
+    if (scanf("%d %d", &books_ID, &books_Copies) != 2 || countBooks == MAX_BOOKS)
     {
-      
       break;
     }
 
@@ -84,7 +158,6 @@ int inputBooks()
     booksList_Copies_List[countBooks] = books_Copies;
     countBooks++;
   }
-  
 }
 
 // members
@@ -98,7 +171,6 @@ int inputMembers()
 
     if (scanf("%d", &member_ID) != 1 || countMembers == MAX_MEMBERS)
     {
-    
       break;
     }
 
@@ -109,7 +181,6 @@ int inputMembers()
 // borrowed
 int inputBorrowed()
 {
-  
   int column1 = 0;
   int column2 = 0;
   int booksBorrowed, membersBorrowed;
@@ -129,17 +200,371 @@ int inputBorrowed()
     date[countdate][2] = year;
     for (int i = 0; i < countBooks; i++)
     {
-      if (borrowed[countMembers][0] == booksList_ID_List[i])
+      if (borrowed[countBorrowed][0] == booksList_ID_List[i])
+      {
         if (booksList_Copies_List[i] > 0)
         {
           booksList_Copies_List[i] = booksList_Copies_List[i] - 1;
         }
-        else if (booksList_Copies_List[i] == 0)
+        else if (booksList_Copies_List[i] <= 0)
         {
-          printf("There are no copies for this book");
+          printf("There are no copies for this book\n");
+          countBorrowed--;
+          countdate--;
         }
+      }
     }
     countBorrowed++;
     countdate++;
   }
 }
+// check functions
+int checkDate(int i)
+{
+  int check;
+
+  for (int j = i; j >= 0; j--)
+  {
+    if (i != j || i == 0)
+    {
+      if ((date[i][0] != date[j][0] || date[i][1] != date[j][1] || date[i][2] != date[j][2]) || i == 0)
+      {
+        check = 1;
+      }
+      else if (date[i][0] == date[j][0])
+      {
+        check = 0;
+        break;
+      }
+    }
+  }
+
+  return check;
+}
+int checkMembers(int i)
+{
+  int check;
+
+  for (int j = i; j >= 0; j--)
+  {
+    if (i != j || i == 0)
+    {
+      if ((borrowed[i][1] != borrowed[j][1]) || i == 0)
+      {
+        check = 1;
+      }
+      else if (borrowed[i][1] == borrowed[j][1])
+
+      {
+        check = 0;
+        break;
+      }
+    }
+  }
+
+  return check;
+}
+int Books_Borrowed_Days()
+{
+  for (int i = 0; i < countdate; i++)
+  {
+
+    if (checkDate(i) == 1)
+    {
+      printf("%d/%d/%d\n", date[i][0], date[i][1], date[i][2]);
+    }
+  }
+}
+// Ahmed Thanwya
+void books_unborrowed()
+{
+  int check;
+  for (int i = 0; i < countBooks; i++)
+  {
+    check = 1;
+    for (int j = 0; j < countBorrowed; j++)
+    {
+      if (booksList_ID_List[i] == borrowed[j][0])
+      {
+        check = 0;
+        break;
+      }
+    }
+
+    if (check == 1)
+      printf("%d\n", booksList_ID_List[i]);
+  }
+}
+// Ahmed Thanwya
+void list_member_books(int member)
+{
+  int check = 1;
+  for (int i = 0; i < countMembers; i++)
+  {
+    if (member == borrowed[i][1])
+    {
+      printf("%d\n", borrowed[i][0]);
+      check = 0;
+    }
+  }
+  if (check)
+    printf("none\n");
+}
+
+// Sama
+void printBooksAvailable()
+{
+  for (int i = 0; i < countBooks; i++)
+  {
+    if (booksList_Copies_List[i] > 0)
+    {
+      printf("%d\n", booksList_ID_List[i]);
+    }
+  }
+}
+// Sama
+void printNumberBooks()
+{
+  printf("%d", countBooks);
+}
+// Sama
+void overlapping(int bookID)
+{
+  int count = 0;
+  int overlapping[countBorrowed];
+  for (int i = 0; i < countBorrowed; i++)
+  {
+    if (borrowed[i][0] == bookID)
+    {
+      overlapping[count] = borrowed[i][1];
+      count++;
+    }
+  }
+  if (count >= 2)
+  {
+    for (int j = 0; j < count; j++)
+    {
+      printf("%d\n", overlapping[j]);
+    }
+  }
+  else
+  {
+    printf("None\n");
+  }
+}
+// basmalla
+void mostBorrowedBook()
+{
+  int most_borrowed = 0;
+  int count = 0;
+  int max_count = 0;
+  for (int i = 0; i < countBorrowed; i++)
+  {
+    count = 0;
+    for (int j = 0; j < countBorrowed; j++)
+    {
+      if (borrowed[i][0] == borrowed[j][0])
+      {
+        count++;
+      }
+    }
+    if (count > max_count)
+    {
+      max_count = count;
+      most_borrowed = borrowed[i][0];
+    }
+  }
+
+  printf("%d\n", most_borrowed);
+} // basmalla
+void Members_Less_n(int limit)
+{
+  int count;
+  for (int i = 0; i < countMembers; i++)
+  {
+    count = 0;
+
+    for (int j = 0; j < countBorrowed; j++)
+    {
+      if (Members_ID_List[i] == borrowed[j][1])
+      {
+        count++;
+      }
+    }
+
+    if (count < limit)
+    {
+      printf("%d\n", Members_ID_List[i]);
+    }
+  }
+}
+// Ahmed Stem
+void Number_Members()
+{
+  printf("%d\n", countMembers);
+}
+
+// Ahmed Stem
+void List_Book_Borrowers(int bookID)
+{
+  bool found = false;
+  for (int i = 0; i < countBorrowed; i++)
+  {
+    if (borrowed[i][0] == bookID)
+    {
+      printf("%d\n", borrowed[i][1]);
+      found = true;
+    }
+  }
+  if (!found)
+  {
+    printf("none\n");
+  }
+}
+
+// 3.bookIDMin
+// int bookIDMin()
+// {
+//   int min = books[0][0];
+//   for (int i = 0; i < countBooks; i++)
+//   {
+//     if (books[i][0] < min)
+//       min = books[i][0];
+//   }
+//   printf("%d\n", min);
+//   return 0;
+// }
+// happipa
+// int books_per_Members()
+// {
+
+//   int booksNumber;
+//   for (int i = 0; i < countMembers; i++)
+//     booksNumber = 0;
+//   printf("%d ", Members_ID_List[i]);
+//   for (int j = 0; j < countBorrowed; j++)
+//     if (borrowed[i][1] == Members_ID_List[i])
+//     {
+
+//       borrowed[i][0];
+//       printf("%d\n", borrowed[i][0]);
+//       x = 0;
+//       booksNumber++;
+//     }
+// }
+
+/*
+habiba
+books per member
+
+for(go on the borrowed members int i ){
+
+count = 0
+printf(memberi )
+for(go on the borrowed members j=i j<count boorrwed){
+if (memberi == member j){
+count+=1
+}
+
+}
+}
+printf(count)
+}
+
+
+
+
+
+book id min
+int smallest = 0
+for (go on the ids int i){
+if (idi < smallest){
+smallest = idi
+}
+}
+print(smallest (newline))
+
+
+
+
+
+*/
+/*
+basmalla:
+most borrowed = 0
+count = 0
+max count = 0
+for (go in the borrowed list i)
+for(go  again j){
+if(borrwed book i == borrowed book j){
+count++
+}
+if count>maxcount{
+max count =count
+most borrowed = borrowed i
+}
+}
+
+
+
+Members_Less n (int limit)
+
+int count
+
+for (go on the memberslist int i ){
+count = 0
+for ( go on the borrowedlist int j){
+if( memberlist[i]==borrowedlist[j]){
+count++
+}
+}
+if count < limit {
+print(memberlist[i])
+}
+}
+
+
+4.Ahmed thanwya
+books unborrowed
+
+for( go on books ids int i){
+check = 0
+for(go on borrowed books int j){
+if(idi == borrowedj){
+break
+}else{
+check=1
+}
+}
+if(check) print(idi)
+}
+
+
+list_member_id (int member)
+for(go on borrwed members int i)
+if(member == borrowed memberi)
+printf(borrowed book i (newline))
+
+Sama:
+overlaping (int bookId)
+int count = 0
+int overlapping[countborrowed]
+for (go on the borrowedbooks int i){
+if (borroedbook[i] = bookId){
+overlapping[count] = borrowedMember[i]
+
+count++
+}
+if (count >= 2){
+for (go on the list of overlaping int j, j<count)
+printf(overlapping[i])
+}else
+ printf(none)
+
+
+
+
+
+
+
+*/
