@@ -226,7 +226,7 @@ int inputBorrowed()
         }
       }
     for (int i = 0; i < countBooks; i++)
-    {
+    { 
       if (foundMember == 1)
       {
         if (borrowed[countBorrowed][0] == booksList_ID_List[i])
@@ -244,7 +244,7 @@ int inputBorrowed()
           }
         }
       }
-
+      
     }
     if (foundMember == 0)
     {
@@ -347,13 +347,7 @@ void printBooksAvailable()
 // Sama
 void printNumberBooks()
 {
-  int countAvailble=0;
-  for(int i= 0; i <countBooks; i++){
-    if(booksList_Copies_List[i] != 0){
-      countAvailble++;
-    }
-  }
-  printf("%d\n",countAvailble);
+  printf("%d\n",countBooks);
 }
 // Sama
 void overlapping(int bookID)
@@ -481,3 +475,137 @@ int Books_per_Members()
     printf("%d\n", Books_Count);
   }
 }
+
+/*
+3.bookIDMin
+int bookIDMin()
+{
+  int min = books[0][0];
+  for (int i = 0; i < countBooks; i++)
+  {
+    if (books[i][0] < min)
+      min = books[i][0];
+  }
+  printf("%d\n", min);
+  return 0;
+}
+happipa
+int books_per_Members()
+{
+
+  int booksNumber;
+  for (int i = 0; i < countMembers; i++)
+    booksNumber = 0;
+  printf("%d ", Members_ID_List[i]);
+  for (int j = 0; j < countBorrowed; j++)
+    if (borrowed[i][1] == Members_ID_List[i])
+    {
+
+      borrowed[i][0];
+      printf("%d\n", borrowed[i][0]);
+      x = 0;
+      booksNumber++;
+    }
+}
+
+habiba
+books per member
+
+for(go on the borrowed members int i ){
+
+count = 0
+printf(memberi )
+for(go on the borrowed members j=i j<count boorrwed){
+if (memberi == member j){
+count+=1
+}
+
+}
+}
+printf(count)
+}
+
+
+
+
+
+book id min
+int smallest = 0
+for (go on the ids int i){
+if (idi < smallest){
+smallest = idi
+}
+}
+print(smallest (newline))
+
+basmalla:
+most borrowed = 0
+count = 0
+max count = 0
+for (go in the borrowed list i)
+for(go  again j){
+if(borrwed book i == borrowed book j){
+count++
+}
+if count>maxcount{
+max count =count
+most borrowed = borrowed i
+}
+}
+
+
+
+Members_Less n (int limit)
+
+int count
+
+for (go on the memberslist int i ){
+count = 0
+for ( go on the borrowedlist int j){
+if( memberlist[i]==borrowedlist[j]){
+count++
+}
+}
+if count < limit {
+print(memberlist[i])
+}
+}
+
+
+4.Ahmed thanwya
+books unborrowed
+
+for( go on books ids int i){
+check = 0
+for(go on borrowed books int j){
+if(idi == borrowedj){
+break
+}else{
+check=1
+}
+}
+if(check) print(idi)
+}
+
+
+list_member_id (int member)
+for(go on borrwed members int i)
+if(member == borrowed memberi)
+printf(borrowed book i (newline))
+
+Sama:
+overlaping (int bookId)
+int count = 0
+int overlapping[countborrowed]
+for (go on the borrowedbooks int i){
+if (borroedbook[i] = bookId){
+overlapping[count] = borrowedMember[i]
+
+count++
+}
+if (count >= 2){
+for (go on the list of overlaping int j, j<count)
+printf(overlapping[i])
+}else
+ printf(none)
+*/
