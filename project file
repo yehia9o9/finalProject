@@ -44,7 +44,6 @@ int Book_ID_min();
 int Books_per_Members();
 // checking functions
 int checkDate(int i);
-int checkMembers(int i);
 
 // main
 int main()
@@ -203,10 +202,11 @@ int inputBorrowed()
   int column2 = 0;
   int booksBorrowed, membersBorrowed;
   int days, months, year;
-
-  while (true)
+  int foundMember;
+  int foundBook;
+    while (true)
   {
-
+    foundBook = 0;
     if (scanf("%d %d %d/%d/%d", &booksBorrowed, &membersBorrowed, &days, &months, &year) == EOF || countBorrowed == MAX_BORROW)
     {
       break;
@@ -216,21 +216,47 @@ int inputBorrowed()
     date[countdate][0] = days;
     date[countdate][1] = months;
     date[countdate][2] = year;
-    for (int i = 0; i < countBooks; i++)
-    {
-      if (borrowed[countBorrowed][0] == booksList_ID_List[i])
+    for (int j = 0; j < countMembers; j++)
       {
-        if (booksList_Copies_List[i] > 0)
+        foundMember = 0;
+        if (Members_ID_List[j] == borrowed[countBorrowed][1])
         {
-          booksList_Copies_List[i] = booksList_Copies_List[i] - 1;
-        }
-        else if (booksList_Copies_List[i] <= 0)
-        {
-          printf("There are no copies for this book\n");
-          countBorrowed--;
-          countdate--;
+          foundMember = 1;
+          break;
         }
       }
+    for (int i = 0; i < countBooks; i++)
+    {
+      if (foundMember == 1)
+      {
+        if (borrowed[countBorrowed][0] == booksList_ID_List[i])
+        {
+          foundBook = 1;
+          if (booksList_Copies_List[i] > 0)
+          {
+            booksList_Copies_List[i] = booksList_Copies_List[i] - 1;
+          }
+          else if (booksList_Copies_List[i] <= 0)
+          {
+            printf("There are no copies for this book\n");
+            countBorrowed--;
+            countdate--;
+          }
+        }
+      }
+
+    }
+    if (foundMember == 0)
+    {
+      printf("This member does not exist\n");
+      countBorrowed--;
+      countdate--;
+    }
+    if (foundBook == 0 && foundMember == 1)
+    {
+      printf("This book does not exist\n");
+      countBorrowed--;
+      countdate--;
     }
     countBorrowed++;
     countdate++;
@@ -259,28 +285,7 @@ int checkDate(int i)
 
   return check;
 }
-int checkMembers(int i)
-{
-  int check;
 
-  for (int j = i; j >= 0; j--)
-  {
-    if (i != j || i == 0)
-    {
-      if ((borrowed[i][1] != borrowed[j][1]) || i == 0)
-      {
-        check = 1;
-      }
-      else if (borrowed[i][1] == borrowed[j][1])
-
-      {
-        check = 0;
-        break;
-      }
-    }
-  }
-  return check;
-}
 int Books_Borrowed_Days()
 {
   for (int i = 0; i < countdate; i++)
@@ -342,7 +347,13 @@ void printBooksAvailable()
 // Sama
 void printNumberBooks()
 {
-  printf("%d\n", countBooks);
+  int countAvailble=0;
+  for(int i= 0; i <countBooks; i++){
+    if(booksList_Copies_List[i] != 0){
+      countAvailble++;
+    }
+  }
+  printf("%d\n",countAvailble);
 }
 // Sama
 void overlapping(int bookID)
