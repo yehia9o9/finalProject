@@ -19,17 +19,12 @@ int countdate = 0;
 int booksList_ID_List[MAX_BOOKS];
 int booksList_Copies_List[MAX_BOOKS];
 // 2.member
-int Members_ID_List[MAX_MEMBERS];
+int Members_ID_List[MAX_MEMBERS][2];
 // 3.borrowed
 int borrowed[MAX_BORROW][2];
 int date[MAX_BORROW][3];
 
-// declaration
-// 1.input
-int inputBooks();
-int inputMembers();
-int inputBorrowed();
-// 2.action functions
+// declaration of functions
 int Books_Borrowed_Days();
 void books_unborrowed();
 void list_member_books(int member);
@@ -48,33 +43,196 @@ int checkDate(int i);
 // main
 int main()
 {
-  // input
+  // input variables
   char section[50];
   char cmd[50];
-  // input
-  while (scanf("%50s", section) != EOF)
+
+  // sections and input
+  while (fgets(section, sizeof(section), stdin) != NULL)
   {
+    // books input
+    if (strcmp(section, "Books:\n") == 0)
+    {
+      int books_ID;
+      int books_Copies;
 
-    if (strcmp(section, "Books:") == 0)
-    {
-      inputBooks();
-    }
-    else if (strcmp(section, "Members:") == 0)
-    {
-      inputMembers();
-    }
-    else if (strcmp(section, "Borrowed_Books:") == 0)
-    {
+      while (1)
+      {
 
-      inputBorrowed();
+        if (fgets(section, sizeof(section), stdin) == NULL)
+        {
+          printf("try again you enterd a null value\n");
+          continue;
+        }
+        if (sscanf(section, "%d %d", &books_ID, &books_Copies) == 2 && countBooks < MAX_BOOKS)
+        {
+
+          if (books_ID <= 999 && books_ID >= 0 && books_Copies >= 0)
+          {
+            booksList_ID_List[countBooks] = books_ID;
+            booksList_Copies_List[countBooks] = books_Copies;
+            countBooks++;
+          }
+          else
+          {
+            printf("Invalid Input: ID must be less than or equal 3 chars; IDs and Copies must be positive.\n");
+          }
+        }
+        else if (countBooks >= MAX_BOOKS)
+        {
+          printf("Max Books reached; cannot add more Books\n");
+        }
+        else if (strcmp(section, "Members:\n") == 0)
+        {
+          break;
+        }
+        else
+        {
+          printf("Wrong format: Use book_id book_copies.\n");
+        }
+      }
+    }
+    if (strcmp(section, "Members:\n") == 0)
+    {
+      int member_ID;
+
+      while (1)
+      {
+        if (fgets(section, sizeof(section), stdin) == NULL)
+        {
+          printf("try again you enterd a null value\n");
+          continue;
+        }
+        if (sscanf(section, "%d", &member_ID) == 1 && countMembers < MAX_MEMBERS)
+        {
+          if (member_ID <= 999999 && member_ID >= 0)
+          {
+            Members_ID_List[countMembers][0] = member_ID;
+            countMembers++;
+          }
+          else
+          {
+            printf("Invalid Input: ID must be less than or equal 6 chars; IDs must be positive.\n");
+          }
+        }
+        else if (countMembers >= MAX_MEMBERS)
+        {
+          printf("Max Members reached; cannot add more Members\n");
+        }
+        else if (strcmp(section, "Borrowed_Books:\n") == 0)
+        {
+          break;
+        }
+        else
+        {
+          printf("Wrong format: Use member_id\n");
+        }
+      }
+    }
+
+    if (strcmp(section, "Borrowed_Books:\n") == 0)
+    {
+      int booksBorrowed, membersBorrowed;
+      int days, months, year;
+      int foundMember;
+      int foundBook;
+      int checkBorrowingEqFive;
+
+      while (true)
+      {
+        checkBorrowingEqFive = 0;
+        foundBook = 0;
+        if (fgets(section, sizeof(section), stdin) == NULL)
+        {
+          break;
+        }
+        if (sscanf(section, "%d %d %d/%d/%d", &booksBorrowed, &membersBorrowed, &days, &months, &year) == 5 && countBorrowed < MAX_BORROW)
+        {
+          if (year > 1900 && year < 2200 && months > 0 && months < 13 && days > 0 && days < 32)
+          {
+            borrowed[countBorrowed][0] = booksBorrowed;
+            borrowed[countBorrowed][1] = membersBorrowed;
+            date[countdate][0] = days;
+            date[countdate][1] = months;
+            date[countdate][2] = year;
+          }
+          else
+          {
+            printf("Invalid Input: Date must be realistic.\n");
+            continue;
+          }
+        }
+        else if (countBorrowed >= MAX_MEMBERS)
+        {
+
+          printf("Max Borrowed operation reached; cannot add more Operations\n");
+          continue;
+        }
+        else if (section == NULL)
+        {
+          break;
+        }
+        else
+        {
+          printf("Wrong format: Use book_id member_id DAYS/MONTHS/YEARS\n");
+          continue;
+        }
+
+        for (int i = 0; i < countBooks; i++)
+        {
+
+          if (borrowed[countBorrowed][0] == booksList_ID_List[i])
+          {
+            foundBook = 1;
+            if (booksList_Copies_List[i] > 0)
+            {
+              booksList_Copies_List[i] = booksList_Copies_List[i] - 1;
+            }
+            else if (booksList_Copies_List[i] <= 0)
+            {
+              printf("There are no copies for this book\n");
+              continue;
+            }
+          }
+        }
+        if (foundBook == 0)
+        {
+          printf("This book does not exist\n");
+          continue;
+        }
+        for (int j = 0; j < countMembers; j++)
+        {
+          foundMember = 0;
+          if (Members_ID_List[j][0] == borrowed[countBorrowed][1])
+          {
+            foundMember = 1;
+            Members_ID_List[j][1]++;
+            if( Members_ID_List[j][1] > 5){
+            checkBorrowingEqFive = 1;
+            }
+            break;
+          }
+        }
+        if(checkBorrowingEqFive){
+          printf("Each member can borrow books up to 5 times.\n");
+          continue;
+        }
+        if (foundMember == 0)
+        {
+          printf("This member does not exist\n");
+          continue;
+        }
+
+        countBorrowed++;
+        countdate++;
+      }
       break;
     }
-    else
+    if (strcmp(section, "Members:\n") != 0 && strcmp(section, "Borrowed_Books:\n") != 0 && strcmp(section, "Books:\n") != 0)
     {
       printf("this section does not exist\n");
     }
   }
-
   // commands
   while (true)
   {
@@ -147,7 +305,7 @@ int main()
 
     else if (strcmp(cmd, "Quit") == 0)
     {
-      printf("Thanks !");
+      printf("Thanks!");
       break;
     }
     else
@@ -157,111 +315,7 @@ int main()
   }
 }
 
-// books
-int inputBooks()
-{
-  int books_ID;
-  int books_Copies;
 
-  while (true)
-  {
-
-    if (scanf("%d %d", &books_ID, &books_Copies) != 2 || countBooks == MAX_BOOKS)
-    {
-      break;
-    }
-
-    booksList_ID_List[countBooks] = books_ID;
-    booksList_Copies_List[countBooks] = books_Copies;
-    countBooks++;
-  }
-}
-
-// members
-
-int inputMembers()
-{
-  int member_ID;
-
-  while (true)
-  {
-
-    if (scanf("%d", &member_ID) != 1 || countMembers == MAX_MEMBERS)
-    {
-      break;
-    }
-
-    Members_ID_List[countMembers] = member_ID;
-    countMembers++;
-  }
-}
-// borrowed
-int inputBorrowed()
-{
-  int column1 = 0;
-  int column2 = 0;
-  int booksBorrowed, membersBorrowed;
-  int days, months, year;
-  int foundMember;
-  int foundBook;
-    while (true)
-  {
-    foundBook = 0;
-    if (scanf("%d %d %d/%d/%d", &booksBorrowed, &membersBorrowed, &days, &months, &year) == EOF || countBorrowed == MAX_BORROW)
-    {
-      break;
-    }
-    borrowed[countBorrowed][0] = booksBorrowed;
-    borrowed[countBorrowed][1] = membersBorrowed;
-    date[countdate][0] = days;
-    date[countdate][1] = months;
-    date[countdate][2] = year;
-    for (int j = 0; j < countMembers; j++)
-      {
-        foundMember = 0;
-        if (Members_ID_List[j] == borrowed[countBorrowed][1])
-        {
-          foundMember = 1;
-          break;
-        }
-      }
-    for (int i = 0; i < countBooks; i++)
-    { 
-      if (foundMember == 1)
-      {
-        if (borrowed[countBorrowed][0] == booksList_ID_List[i])
-        {
-          foundBook = 1;
-          if (booksList_Copies_List[i] > 0)
-          {
-            booksList_Copies_List[i] = booksList_Copies_List[i] - 1;
-          }
-          else if (booksList_Copies_List[i] <= 0)
-          {
-            printf("There are no copies for this book\n");
-            countBorrowed--;
-            countdate--;
-          }
-        }
-      }
-      
-    }
-    if (foundMember == 0)
-    {
-      printf("This member does not exist\n");
-      countBorrowed--;
-      countdate--;
-    }
-    if (foundBook == 0 && foundMember == 1)
-    {
-      printf("This book does not exist\n");
-      countBorrowed--;
-      countdate--;
-    }
-    countBorrowed++;
-    countdate++;
-  }
-}
 // check functions
 int checkDate(int i)
 {
@@ -275,7 +329,7 @@ int checkDate(int i)
       {
         check = 1;
       }
-      else if (date[i][0] == date[j][0])
+      else
       {
         check = 0;
         break;
@@ -288,14 +342,17 @@ int checkDate(int i)
 
 int Books_Borrowed_Days()
 {
+  int countUniqeDays;
   for (int i = 0; i < countdate; i++)
   {
 
     if (checkDate(i) == 1)
     {
-      printf("%d/%d/%d\n", date[i][0], date[i][1], date[i][2]);
+      // printf("%d/%d/%d\n", date[i][0], date[i][1], date[i][2]);
+      countUniqeDays++;
     }
   }
+  printf("%d\n", countUniqeDays);
 }
 // Ahmed Thanwya
 void books_unborrowed()
@@ -347,7 +404,7 @@ void printBooksAvailable()
 // Sama
 void printNumberBooks()
 {
-  printf("%d\n",countBooks);
+  printf("%d\n", countBooks);
 }
 // Sama
 void overlapping(int bookID)
@@ -408,7 +465,7 @@ void Members_Less_n(int limit)
 
     for (int j = 0; j < countBorrowed; j++)
     {
-      if (Members_ID_List[i] == borrowed[j][1])
+      if (Members_ID_List[i][0] == borrowed[j][1])
       {
         count++;
       }
@@ -416,7 +473,7 @@ void Members_Less_n(int limit)
 
     if (count < limit)
     {
-      printf("%d\n", Members_ID_List[i]);
+      printf("%d\n", Members_ID_List[i][0]);
     }
   }
 }
@@ -463,11 +520,11 @@ int Books_per_Members()
   {
     Books_Count = 0;
 
-    printf("%d ", Members_ID_List[i]);
+    printf("%d ", Members_ID_List[i][0]);
 
     for (int j = 0; j < countBorrowed; j++)
     {
-      if (borrowed[j][1] == Members_ID_List[i])
+      if (borrowed[j][1] == Members_ID_List[i][0])
       {
         Books_Count++;
       }
