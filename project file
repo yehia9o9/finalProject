@@ -346,6 +346,7 @@ int Books_Borrowed_Days(int i)
 void books_unborrowed()
 {
   int check;
+  int count = 0;
   for (int i = 0; i < countBooks; i++)
   {
     check = 1;
@@ -359,8 +360,13 @@ void books_unborrowed()
     }
 
     if (check == 1)
+    {
       printf("%d\n", booksList_ID_List[i]);
+      count++;
+    }
   }
+  if (count == 0)
+    printf("None\n");
 }
 void list_member_books(int member)
 {
@@ -378,7 +384,7 @@ void list_member_books(int member)
 }
 void printBooksAvailable()
 {
-  for (int i = 0; i < countBooks; i++)
+  int for (int i = 0; i < countBooks; i++)
   {
     if (booksList_Copies_List[i] > 0)
     {
@@ -440,13 +446,17 @@ void mostBorrowedBook()
 }
 void Members_Less_n(int limit)
 {
+  int count = 0;
   for (int i = 0; i < countMembers; i++)
   {
     if (Members_ID_List[i][1] < limit)
     {
       printf("%d\n", Members_ID_List[i][0]);
+      count++;
     }
   }
+  if (count == 0)
+    printf("None\n");
 }
 void Number_Members()
 {
